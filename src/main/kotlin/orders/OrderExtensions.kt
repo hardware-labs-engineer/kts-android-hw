@@ -14,5 +14,11 @@ fun Order.applyDiscount(
     discountPercent: Int,
     logger: ((String) -> Unit)? = null
 ) {
-    // TODO: apply discount to each product using extension + scoped functions
+    products.forEach {
+        val discountedPrice = it.price * (100 - discountPercent) / 100
+        val discountedProduct = it.copy(price = discountedPrice)
+        this.removeProductById(it.id)
+        this.addProduct(discountedProduct)
+        logger?.invoke("Applied discount to ${it.name}: $discountedPrice")
+    }
 }
